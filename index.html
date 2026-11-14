@@ -521,7 +521,25 @@
       font-size: 1.35rem;
       font-weight: 700;
     }
+
+    /* ค่าเริ่มต้น (หน้าจอมือถือ/แท็บเล็ตเล็ก): แสดงข้อความสั้น ซ่อนข้อความยาว */
+    .title-pc {
+      display: none;
+    }
+    .title-mobile {
+      display: inline;
+    }
   
+    /* หน้าจอ PC (กว้าง 900px ขึ้นไป): แสดงข้อความยาว ซ่อนข้อความสั้น */
+    @media (min-width: 900px) {
+      .title-pc {
+        display: inline;
+      }
+      .title-mobile {
+        display: none;
+      }
+    }
+    
     .footer-note-box {
       font-size: 0.88rem;
       color: var(--text-muted);
