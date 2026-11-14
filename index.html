@@ -193,24 +193,25 @@
     /* ==========================================
        5. ปุ่มกดและตัวเลือก (Buttons & Dropdowns)
        ========================================== */
+    /* บังคับ 4 ปุ่มในกล่องที่ 1 ให้อยู่แถวเดียวกันเสมอทั้งบนมือถือและคอม */
     .quick-select-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
     }
   
     .pill-btn {
       background: #fff;
       border: 1.5px solid var(--primary-border);
       color: var(--text-main);
-      padding: 10px 12px;
+      padding: 10px 6px;
       border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
-      flex: 1 1 auto;
       text-align: center;
+      white-space: nowrap;
     }
   
     .pill-btn:hover {
@@ -236,9 +237,9 @@
       background: #fff;
       border: 1.5px solid var(--primary-border);
       color: var(--text-main);
-      padding: 10px 12px;
+      padding: 10px 10px;
       border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 500;
       outline: none;
       cursor: pointer;
@@ -259,7 +260,7 @@
       font-size: 0.95rem;
       color: var(--text-muted);
       font-weight: 500;
-      text-align: left;
+      text-align: right; /* จัดชิดขวาตามที่ระบุ */
     }
     .bill-unit-result span {
       color: var(--primary);
@@ -319,16 +320,20 @@
       margin-left: 4px;
     }
   
+    /* เลย์เอาต์กล่องที่ 3: บนจอใหญ่เรียง 3 ช่อง บนมือถือแบ่ง 2 ปุ่มบน + ช่องแบตเตอรี่เต็มบรรทัดล่าง */
     .package-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr 1.3fr;
+      grid-template-columns: 1fr 1fr 1.25fr;
       gap: 8px;
       margin-bottom: 16px;
     }
   
-    @media (max-width: 480px) {
+    @media (max-width: 540px) {
       .package-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+      }
+      .package-layout .custom-select {
+        grid-column: span 2;
       }
     }
   
@@ -338,7 +343,7 @@
     .summary-list {
       display: flex;
       flex-direction: column;
-      gap: 4px; /* ปรับลดช่องว่างตามที่ระบุ */
+      gap: 4px;
     }
   
     .summary-row {
@@ -433,6 +438,17 @@
       font-weight: 600;
       color: var(--primary);
       margin-bottom: 10px;
+      line-height: 1.4;
+    }
+  
+    /* สั่งให้วงเล็บในหัวข้อสัญญาขึ้นบรรทัดใหม่เฉพาะบนมือถือ */
+    .mobile-break {
+      display: inline;
+    }
+    @media (max-width: 540px) {
+      .mobile-break {
+        display: block;
+      }
     }
   
     .loan-grid-2 {
@@ -496,7 +512,7 @@
     .main-header-box {
       background: var(--primary);
       color: #ffffff;
-      padding: 10px; /* ปรับ padding ให้เล็กลง */
+      padding: 10px;
       border-radius: var(--radius-lg);
       text-align: center;
       box-shadow: var(--shadow-card);
@@ -552,7 +568,7 @@
         </div>
 
         <div class="bill-unit-result">
-          คิดเป็นหน่วยการใช้ไฟฟ้า <span id="unitResult">0</span> หน่วย/เดือน
+          คิดเป็น <span id="unitResult">0</span> หน่วย/เดือน
         </div>
       </div>
 
@@ -605,8 +621,8 @@
         </div>
 
         <div class="package-layout" id="packageButtons" style="margin-bottom: 0;">
-          <button type="button" class="pill-btn active" data-kw="5" data-price="140000" data-gen="580">5 kW</button>
-          <button type="button" class="pill-btn" data-kw="10" data-price="230000" data-gen="1160">10 kW</button>
+          <button type="button" class="pill-btn active" data-kw="5" data-price="140000" data-gen="580">ชุดเล็ก 5 kW</button>
+          <button type="button" class="pill-btn" data-kw="10" data-price="230000" data-gen="1160">ชุดใหญ่ 10 kW</button>
           
           <select id="batterySelect" class="custom-select">
             <option value="0">แบตเตอรี่: ไม่ใช้</option>
@@ -645,7 +661,7 @@
           <hr class="summary-divider">
 
           <div class="summary-row highlight">
-            <span class="summary-label">ราคาหลังหักส่วนลด</span>
+            <span class="summary-label">ราคาสุทธิ</span>
             <span class="summary-val final-price">฿ <span id="netPriceDisplay">90,000</span></span>
           </div>
         </div>
@@ -680,7 +696,7 @@
           </div>
 
           <div class="loan-card">
-            <div class="loan-card-title">สัญญาที่ 1 (ธนาคารรับเงินสนับสนุน)</div>
+            <div class="loan-card-title">สัญญาที่ 1 <span class="mobile-break">(ธนาคารรับเงินสนับสนุน)</span></div>
             <div class="loan-grid-2">
               <div>
                 <div class="loan-field-label">ยอดจัด</div>
@@ -692,12 +708,12 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan1ResultText">
-              สัญญาที่ 1 ผ่อนชำระต่อเดือน ฿ 1,600
+              ผ่อนเดือนละ ฿ 1,600
             </div>
           </div>
 
           <div id="loan2Container" class="loan-card" style="display: none;">
-            <div class="loan-card-title">สัญญาที่ 2 (ส่วนที่เกิน 90,000 บาท)</div>
+            <div class="loan-card-title">สัญญาที่ 2 <span class="mobile-break">(ส่วนที่เกิน 90,000 บาท)</span></div>
             <div class="loan-grid-2">
               <div>
                 <div class="loan-field-label">ยอดจัด</div>
@@ -719,12 +735,12 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan2ResultText">
-              สัญญาที่ 2 ผ่อนชำระต่อเดือน ฿ 0
+              ผ่อนเดือนละ ฿ 0
             </div>
           </div>
 
           <div class="purple-highlight-box">
-            <div class="purple-highlight-label" style="font-weight: 700;">รวมผ่อนชำระต่อเดือนทั้งสิ้น</div>
+            <div class="purple-highlight-label" style="font-weight: 700;">รวมผ่อนเดือนละ</div>
             <div class="purple-highlight-val" id="totalLoanMonthly" style="font-weight: 700;">฿ 1,600</div>
           </div>
         </div>
@@ -739,12 +755,12 @@
 
         <div class="summary-list">
           <div class="summary-row">
-            <span class="summary-label">ลดค่าไฟได้ต่อเดือน <span id="savingUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-label">ลดค่าไฟเดือนละ <span id="savingUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
             <span class="summary-val">฿ <span id="savingBillDisplay">0</span></span>
           </div>
 
           <div class="summary-row">
-            <span class="summary-label">ขายไฟคืนได้ต่อเดือน <span id="sellUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-label">ขายไฟคืนเดือนละ <span id="sellUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
             <span class="summary-val">฿ <span id="sellBackDisplay">0</span></span>
           </div>
 
@@ -754,7 +770,7 @@
           </div>
 
           <div class="summary-row" id="netLoanRow" style="display: none;">
-            <span class="summary-label">คงเหลือต้องผ่อนชำระต่อเดือน</span>
+            <span class="summary-label">คงเหลือผ่อนเดือนละ</span>
             <span class="summary-val">฿ <span id="netLoanPayDisplay">0</span></span>
           </div>
 
@@ -770,7 +786,7 @@
 
     <!-- ส่วนท้ายสุด -->
     <div class="footer-note-box grid-footer">
-      หมายเหตุ : ตัวเลขทั้งหมดเป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
+      หมายเหตุ : เป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
       พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง
     </div>
 
@@ -873,7 +889,7 @@
     const netLoanPayDisplay = document.getElementById('netLoanPayDisplay');
     const paybackDisplay = document.getElementById('paybackDisplay');
 
-    let currentBillBaht = 2500; // ค่าเริ่มต้น 2500
+    let currentBillBaht = 2500;
     let currentDayPercent = 50;
     let currentBasePrice = 140000;
     let currentSolarGen = 580;
@@ -904,7 +920,7 @@
       } else {
         monthly1 = calculateMonthlyPayment(90000, 2.5, months);
         loan1Principal.innerText = "฿ " + formatNumber(90000);
-        loan1ResultText.innerHTML = `สัญญาที่ 1 ผ่อนชำระต่อเดือน ฿ ${formatNumber(monthly1)}`;
+        loan1ResultText.innerHTML = `ผ่อนเดือนละ ฿ ${formatNumber(monthly1)}`;
         loan1ResultText.style.color = "var(--text-main)";
         loan1ResultText.style.background = "var(--primary-light)";
 
@@ -914,7 +930,7 @@
           let rate2 = parseFloat(loan2RateSelect.value);
           monthly2 = calculateMonthlyPayment(principal2, rate2, months);
           loan2Principal.innerText = "฿ " + formatNumber(principal2);
-          loan2ResultText.innerHTML = `สัญญาที่ 2 ผ่อนชำระต่อเดือน ฿ ${formatNumber(monthly2)}`;
+          loan2ResultText.innerHTML = `ผ่อนเดือนละ ฿ ${formatNumber(monthly2)}`;
         } else {
           loan2Container.style.display = "none";
         }
