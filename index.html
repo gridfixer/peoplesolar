@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>โซลาร์ภาคประชาชน</title>
+  <?!= include('style'); ?>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- กล่องที่ 0: หัวข้อหลักด้านบนสุด -->
+    <div class="main-header-box grid-header">
+      <h1 class="main-header-title">โปรแกรมคำนวณโซลาร์ภาคประชาชน</h1>
+    </div>
+
+    <!-- คอลัมน์ซ้าย (กล่อง 1, 2, 3) -->
+    <div class="col-left">
+      <!-- กล่องที่ 1: ค่าไฟรายเดือน -->
+      <div class="card-box">
+        <div class="section-header">
+          <div class="badge-step">1</div>
+          <h2 class="section-title">ค่าไฟเฉลี่ยต่อเดือน</h2>
+        </div>
+
+        <div class="input-wrapper">
+          <span class="currency-prefix">฿</span>
+          <input type="text" id="billInput" class="number-input" inputmode="numeric" value="4,000">
+        </div>
+
+        <div class="slider-container">
+          <input type="range" id="billSlider" class="purple-slider" min="0" max="20000" step="100" value="4000">
+        </div>
+
+        <div class="quick-select-grid" id="quickButtons">
+          <button type="button" class="pill-btn" data-val="2500">฿2,500</button>
+          <button type="button" class="pill-btn active" data-val="5000">฿5,000</button>
+          <button type="button" class="pill-btn" data-val="7500">฿7,500</button>
+          <button type="button" class="pill-btn" data-val="10000">฿10,000</button>
+        </div>
+
+        <div class="bill-unit-result">
+          คิดเป็นหน่วยการใช้ไฟฟ้าเดือนละ <span id="unitResult">0</span> หน่วย
+        </div>
+      </div>
+
+      <!-- กล่องที่ 2: ใช้ไฟช่วงไหนมากที่สุด? -->
+      <div class="card-box">
+        <div class="section-header">
+          <div class="badge-step">2</div>
+          <h2 class="section-title">ช่วงเวลาการใช้ไฟ</h2>
+        </div>
+
+        <div class="time-split-grid">
+          <div class="time-column" style="align-items: flex-start;">
+            <span class="time-label-top">☀️ กลางวัน</span>
+            <div class="time-input-box" style="width: 100%;">
+              <input type="number" id="dayInput" class="time-number-input" style="text-align: left;" min="0" max="100" value="50">
+              <span class="time-unit">%</span>
+            </div>
+          </div>
+
+          <div class="time-column" style="align-items: flex-end;">
+            <span class="time-label-top">🌙 กลางคืน</span>
+            <div class="time-input-box" style="width: 100%;">
+              <input type="number" id="nightInput" class="time-number-input" style="text-align: right;" min="0" max="100" value="50">
+              <span class="time-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <input type="range" id="timeSlider" class="purple-slider" min="0" max="100" step="5" value="50">
+        </div>
+
+        <div class="equal-width-grid" id="timeButtons">
+          <button type="button" class="pill-btn" data-day="70">กลางวัน</button>
+          <button type="button" class="pill-btn active" data-day="50">เท่ากัน</button>
+          <button type="button" class="pill-btn" data-day="30">กลางคืน</button>
+        </div>
+      </div>
+
+      <!-- กล่องที่ 3: ขนาดโซลาร์เซลล์ (เอาคำว่า ชุดเริ่มต้น/ชุดใหญ่ ออก) -->
+      <div class="card-box">
+        <div class="section-header">
+          <div class="badge-step">3</div>
+          <h2 class="section-title">ขนาดโซลาร์เซลล์</h2>
+        </div>
+
+        <div class="input-wrapper" style="margin-bottom: 14px;">
+          <span class="currency-prefix">฿</span>
+          <input type="text" id="totalSystemPrice" class="number-input" inputmode="numeric" value="140,000">
+        </div>
+
+        <div class="package-layout" id="packageButtons" style="margin-bottom: 0;">
+          <button type="button" class="pill-btn active" data-kw="5" data-price="140000" data-gen="580">5 kW</button>
+          <button type="button" class="pill-btn" data-kw="10" data-price="230000" data-gen="1160">10 kW</button>
+          
+          <select id="batterySelect" class="custom-select">
+            <option value="0">แบตเตอรี่: ไม่ใช้</option>
+            <option value="60000">แบตเตอรี่: 5 kW</option>
+            <option value="120000">แบตเตอรี่: 10 kW</option>
+            <option value="180000">แบตเตอรี่: 15 kW</option>
+          </select>
+        </div>
+
+        <div class="bill-unit-result" style="text-align: right;">
+          ผลิตไฟฟ้าเฉลี่ยเดือนละ <span id="solarGenDisplay">580</span> หน่วย
+        </div>
+      </div>
+    </div>
+
+    <!-- คอลัมน์ขวา (กล่อง 4, 5, 6) -->
+    <div class="col-right">
+      <!-- กล่องที่ 4: หักเงินสนับสนุนจากรัฐ (ย้ายมาอยู่ขวา ก่อนกล่องที่ 5) -->
+      <div class="card-box">
+        <div class="section-header">
+          <div class="badge-step">4</div>
+          <h2 class="section-title">หักเงินสนับสนุนจากรัฐ</h2>
+        </div>
+
+        <div class="summary-list">
+          <div class="summary-row">
+            <span class="summary-label">ราคาปกติ</span>
+            <span class="summary-val">฿ <span id="normalPriceDisplay">140,000</span></span>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label">หักส่วนลด</span>
+            <span class="summary-val discount">- ฿ 50,000</span>
+          </div>
+
+          <hr class="summary-divider">
+
+          <div class="summary-row highlight">
+            <span class="summary-label">ราคาหลังหักส่วนลด</span>
+            <span class="summary-val final-price">฿ <span id="netPriceDisplay">90,000</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- กล่องที่ 5: การชำระเงิน -->
+      <div class="card-box">
+        <div class="section-header">
+          <div class="badge-step">5</div>
+          <h2 class="section-title">การชำระเงิน</h2>
+        </div>
+
+        <div class="pay-mode-grid" id="payModeButtons">
+          <button type="button" class="pill-btn active" data-mode="cash">เงินสด</button>
+          <button type="button" class="pill-btn" data-mode="loan">สินเชื่อ</button>
+        </div>
+
+        <div id="cashSection" class="cash-info-box">
+          ต้องชำระค่าติดตั้งเต็มจำนวน เมื่อเชื่อมระบบเรียบร้อย กรมบัญชีกลางจะโอนเงินสนับสนุน 50,000 บาท เข้าบัญชี PromptPay ตามเลขบัตรประชาชนโดยตรง
+        </div>
+
+        <div id="loanSection" class="loan-section" style="display: none;">
+          <div>
+            <span class="sub-label-title">ระยะเวลาผ่อนชำระ:</span>
+            <select id="loanTermSelect" class="custom-select">
+              <option value="36">ผ่อนชำระ 3 ปี (36 งวด)</option>
+              <option value="48">ผ่อนชำระ 4 ปี (48 งวด)</option>
+              <option value="60">ผ่อนชำระ 5 ปี (60 งวด)</option>
+              <option value="72">ผ่อนชำระ 6 ปี (72 งวด)</option>
+              <option value="84" selected>ผ่อนชำระ 7 ปี (84 งวด)</option>
+            </select>
+          </div>
+
+          <div class="loan-card">
+            <div class="loan-card-title">สัญญาที่ 1 (ธนาคารรับเงินสนับสนุน)</div>
+            <div class="loan-grid-2">
+              <div>
+                <div class="loan-field-label">ยอดจัด</div>
+                <div class="loan-field-val" id="loan1Principal">฿ 90,000</div>
+              </div>
+              <div>
+                <div class="loan-field-label">ดอกเบี้ย</div>
+                <div class="loan-field-val">2.5%</div>
+              </div>
+            </div>
+            <div class="loan-result-text" id="loan1ResultText">
+              สัญญาที่ 1 ผ่อนชำระเดือนละ ฿ 1,600
+            </div>
+          </div>
+
+          <div id="loan2Container" class="loan-card" style="display: none;">
+            <div class="loan-card-title">สัญญาที่ 2 (ส่วนที่เกิน 90,000 บาท)</div>
+            <div class="loan-grid-2">
+              <div>
+                <div class="loan-field-label">ยอดจัด</div>
+                <div class="loan-field-val" id="loan2Principal">฿ 0</div>
+              </div>
+              <div>
+                <div class="loan-field-label">ดอกเบี้ย</div>
+                <div>
+                  <select id="loan2RateSelect" class="custom-select" style="padding: 4px 8px; font-size: 0.9rem;">
+                    <option value="2.5">2.5%</option>
+                    <option value="3.0">3.0%</option>
+                    <option value="3.5" selected>3.5%</option>
+                    <option value="4.0">4.0%</option>
+                    <option value="4.5">4.5%</option>
+                    <option value="5.0">5.0%</option>
+                    <option value="5.5">5.5%</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="loan-result-text" id="loan2ResultText">
+              สัญญาที่ 2 ผ่อนชำระเดือนละ ฿ 0
+            </div>
+          </div>
+
+          <div class="purple-highlight-box">
+            <div class="purple-highlight-label" style="font-weight: 700;">รวมผ่อนชำระเดือนละ</div>
+            <div class="purple-highlight-val" id="totalLoanMonthly" style="font-weight: 700;">฿ 1,600</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- กล่องที่ 6: ความคุ้มค่าในการลงทุน -->
+      <div class="card-box roi-card">
+        <div class="section-header">
+          <div class="badge-step">6</div>
+          <h2 class="section-title">ความคุ้มค่าในการลงทุน</h2>
+        </div>
+
+        <div class="summary-list">
+          <div class="summary-row">
+            <span class="summary-label">ลดค่าไฟได้เดือนละ <span id="savingUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-val">฿ <span id="savingBillDisplay">0</span></span>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label">ขายไฟคืนได้เดือนละ <span id="sellUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-val">฿ <span id="sellBackDisplay">0</span></span>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label">ความคุ้มค่าที่ได้รับ</span>
+            <span class="summary-val">฿ <span id="totalBenefitDisplay">0</span></span>
+          </div>
+
+          <div class="summary-row" id="netLoanRow" style="display: none;">
+            <span class="summary-label">คงเหลือต้องผ่อนชำระเดือนละ</span>
+            <span class="summary-val">฿ <span id="netLoanPayDisplay">0</span></span>
+          </div>
+
+          <hr class="summary-divider">
+
+          <div class="purple-highlight-box">
+            <div class="purple-highlight-label" style="font-weight: 700;">ระยะเวลาคืนทุน</div>
+            <div class="purple-highlight-val" id="paybackDisplay" style="font-weight: 700;">0 ปี 0 เดือน</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนท้ายสุดจริงๆ (อัปเดตชื่อผู้พัฒนาเป็นการไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง) -->
+    <div class="footer-note-box grid-footer">
+      หมายเหตุ : ตัวเลขทั้งหมดเป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
+      พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง
+    </div>
+
+  </div>
+
+  <script>
+    const FT_RATE = 0.1623;
+    const SERVICE_FEE = 24.62;
+    const VAT_MULT = 1.07;
+    const SELL_BACK_RATE = 2.2;
+    const GOV_SUBSIDY = 50000;
+
+    function calculateUnitsFromBaht(baht) {
+      if (baht <= 0) return 0;
+      let baseMoney = baht / VAT_MULT;
+      let netMoney = baseMoney - SERVICE_FEE;
+      if (netMoney <= 0) return 0;
+
+      let rate1 = 3.0000 + FT_RATE;
+      let rate2 = 4.1584 + FT_RATE;
+      let rate3 = 4.3583 + FT_RATE;
+
+      let tier1MaxCost = 200 * rate1;
+      if (netMoney <= tier1MaxCost) return Math.round(netMoney / rate1);
+
+      let tier2Cost = 200 * rate2;
+      let tier12MaxCost = tier1MaxCost + tier2Cost;
+      if (netMoney <= tier12MaxCost) {
+        let remaining = netMoney - tier1MaxCost;
+        return Math.round(200 + (remaining / rate2));
+      }
+
+      let remaining = netMoney - tier12MaxCost;
+      return Math.round(400 + (remaining / rate3));
+    }
+
+    function calculateBahtFromUnits(units) {
+      if (units <= 0) return 0;
+      let energyCost = 0;
+
+      if (units <= 200) {
+        energyCost = units * 3.0000;
+      } else if (units <= 400) {
+        energyCost = (200 * 3.0000) + ((units - 200) * 4.1584);
+      } else {
+        energyCost = (200 * 3.0000) + (200 * 4.1584) + ((units - 400) * 4.3583);
+      }
+
+      let ftCost = units * FT_RATE;
+      let totalBeforeVat = energyCost + ftCost + SERVICE_FEE;
+      return totalBeforeVat * VAT_MULT;
+    }
+
+    function formatNumber(num) {
+      return Number(num).toLocaleString('en-US');
+    }
+
+    function parseNumber(str) {
+      const cleaned = String(str).replace(/[^0-9]/g, '');
+      return cleaned === '' ? 0 : parseInt(cleaned, 10);
+    }
+
+    // DOM Elements
+    const billInput = document.getElementById('billInput');
+    const billSlider = document.getElementById('billSlider');
+    const quickButtons = document.querySelectorAll('#quickButtons .pill-btn');
+    const unitResult = document.getElementById('unitResult');
+
+    const dayInput = document.getElementById('dayInput');
+    const nightInput = document.getElementById('nightInput');
+    const timeSlider = document.getElementById('timeSlider');
+    const timeButtons = document.querySelectorAll('#timeButtons .pill-btn');
+
+    const packageButtons = document.querySelectorAll('#packageButtons .pill-btn');
+    const batterySelect = document.getElementById('batterySelect');
+    const totalSystemPrice = document.getElementById('totalSystemPrice');
+    const solarGenDisplay = document.getElementById('solarGenDisplay');
+
+    const normalPriceDisplay = document.getElementById('normalPriceDisplay');
+    const netPriceDisplay = document.getElementById('netPriceDisplay');
+
+    const payModeButtons = document.querySelectorAll('#payModeButtons .pill-btn');
+    const cashSection = document.getElementById('cashSection');
+    const loanSection = document.getElementById('loanSection');
+    const loanTermSelect = document.getElementById('loanTermSelect');
+    const loan1Principal = document.getElementById('loan1Principal');
+    const loan1ResultText = document.getElementById('loan1ResultText');
+    const loan2Container = document.getElementById('loan2Container');
+    const loan2Principal = document.getElementById('loan2Principal');
+    const loan2RateSelect = document.getElementById('loan2RateSelect');
+    const loan2ResultText = document.getElementById('loan2ResultText');
+    const totalLoanMonthly = document.getElementById('totalLoanMonthly');
+
+    const savingBillDisplay = document.getElementById('savingBillDisplay');
+    const savingUnitsNum = document.getElementById('savingUnitsNum');
+    const sellBackDisplay = document.getElementById('sellBackDisplay');
+    const sellUnitsNum = document.getElementById('sellUnitsNum');
+    const totalBenefitDisplay = document.getElementById('totalBenefitDisplay');
+    const netLoanRow = document.getElementById('netLoanRow');
+    const netLoanPayDisplay = document.getElementById('netLoanPayDisplay');
+    const paybackDisplay = document.getElementById('paybackDisplay');
+
+    let currentBillBaht = 4000;
+    let currentDayPercent = 50;
+    let currentBasePrice = 140000;
+    let currentSolarGen = 580;
+    let currentPayMode = 'cash';
+    let currentTotalMonthlyLoan = 0;
+
+    function recalculateAll() {
+      let totalUnits = calculateUnitsFromBaht(currentBillBaht);
+      unitResult.innerText = formatNumber(totalUnits);
+
+      let totalPrice = parseNumber(totalSystemPrice.value);
+      let netPrice = Math.max(0, totalPrice - GOV_SUBSIDY);
+      normalPriceDisplay.innerText = formatNumber(totalPrice);
+      netPriceDisplay.innerText = formatNumber(netPrice);
+
+      let months = parseInt(loanTermSelect.value, 10);
+      let monthly1 = 0;
+      let monthly2 = 0;
+
+      if (netPrice < 90000) {
+        loan1Principal.innerText = "-";
+        loan1ResultText.innerHTML = "ไม่สามารถผ่อนชำระได้";
+        loan1ResultText.style.color = "#ef4444";
+        loan1ResultText.style.background = "#fef2f2";
+        loan2Container.style.display = "none";
+        totalLoanMonthly.innerText = "ไม่สามารถผ่อนชำระได้";
+        currentTotalMonthlyLoan = 0;
+      } else {
+        monthly1 = calculateMonthlyPayment(90000, 2.5, months);
+        loan1Principal.innerText = "฿ " + formatNumber(90000);
+        loan1ResultText.innerHTML = `สัญญาที่ 1 ผ่อนชำระเดือนละ ฿ ${formatNumber(monthly1)}`;
+        loan1ResultText.style.color = "var(--text-main)";
+        loan1ResultText.style.background = "var(--primary-light)";
+
+        if (netPrice > 90000) {
+          loan2Container.style.display = "block";
+          let principal2 = netPrice - 90000;
+          let rate2 = parseFloat(loan2RateSelect.value);
+          monthly2 = calculateMonthlyPayment(principal2, rate2, months);
+          loan2Principal.innerText = "฿ " + formatNumber(principal2);
+          loan2ResultText.innerHTML = `สัญญาที่ 2 ผ่อนชำระเดือนละ ฿ ${formatNumber(monthly2)}`;
+        } else {
+          loan2Container.style.display = "none";
+        }
+
+        currentTotalMonthlyLoan = monthly1 + monthly2;
+        totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
+      }
+
+      // คำนวณความคุ้มค่า (กล่อง 6)
+      let batteryExtra = parseInt(batterySelect.value, 10);
+      let A = currentSolarGen; 
+      let B = totalUnits * (currentDayPercent / 100); 
+      
+      let sellBackBaht = 0;
+      let surplusUnits = 0;
+      let remainingGridUnits = 0;
+
+      if (batteryExtra > 0) {
+        sellBackBaht = 0;
+        surplusUnits = 0;
+        remainingGridUnits = Math.max(0, totalUnits - A);
+      } else {
+        if (B >= A) {
+          sellBackBaht = 0;
+          surplusUnits = 0;
+          remainingGridUnits = Math.max(0, totalUnits - A);
+        } else {
+          surplusUnits = A - B;
+          sellBackBaht = surplusUnits * SELL_BACK_RATE;
+          remainingGridUnits = Math.max(0, totalUnits - B);
+        }
+      }
+
+      let newBillBaht = (totalUnits <= 0) ? 0 : calculateBahtFromUnits(remainingGridUnits);
+      let savingBillBaht = Math.max(0, currentBillBaht - newBillBaht);
+      let savingUnits = Math.max(0, totalUnits - remainingGridUnits);
+
+      let roundedSaving = Math.round(savingBillBaht);
+      let roundedSellBack = Math.round(sellBackBaht);
+      let totalBenefit = roundedSaving + roundedSellBack;
+
+      savingBillDisplay.innerText = formatNumber(roundedSaving);
+      savingUnitsNum.innerText = formatNumber(savingUnits);
+
+      sellBackDisplay.innerText = formatNumber(roundedSellBack);
+      sellUnitsNum.innerText = formatNumber(Math.round(surplusUnits));
+
+      totalBenefitDisplay.innerText = formatNumber(totalBenefit);
+
+      if (currentPayMode === 'loan' && netPrice >= 90000) {
+        netLoanRow.style.display = "flex";
+        let netLoan = Math.max(0, currentTotalMonthlyLoan - roundedSellBack);
+        netLoanPayDisplay.innerText = formatNumber(netLoan);
+      } else {
+        netLoanRow.style.display = "none";
+      }
+
+      if (totalBenefit > 0 && netPrice > 0) {
+        let totalMonthsPayback = Math.ceil(netPrice / totalBenefit);
+        let years = Math.floor(totalMonthsPayback / 12);
+        let remMonths = totalMonthsPayback % 12;
+        paybackDisplay.innerText = `${years} ปี ${remMonths} เดือน`;
+      } else if (netPrice === 0) {
+        paybackDisplay.innerText = "คืนทุนทันที";
+      } else {
+        paybackDisplay.innerText = "-";
+      }
+    }
+
+    function calculateMonthlyPayment(principal, annualRatePercent, months) {
+      if (principal <= 0 || months <= 0) return 0;
+      let years = months / 12;
+      let totalInterest = principal * (annualRatePercent / 100) * years;
+      return Math.round((principal + totalInterest) / months);
+    }
+
+    // Event Listeners
+    function syncBillValue(val, source) {
+      currentBillBaht = Math.max(0, Math.min(20000, val));
+      if (source !== 'input') billInput.value = formatNumber(currentBillBaht);
+      if (source !== 'slider') billSlider.value = currentBillBaht;
+      
+      quickButtons.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.val, 10) === currentBillBaht);
+      });
+      recalculateAll();
+    }
+
+    billInput.addEventListener('input', (e) => {
+      let rawVal = parseNumber(e.target.value);
+      if (rawVal > 20000) rawVal = 20000;
+      e.target.value = rawVal === 0 && e.target.value === '' ? '' : formatNumber(rawVal);
+      syncBillValue(rawVal, 'input');
+    });
+
+    billInput.addEventListener('blur', (e) => {
+      if (e.target.value === '') {
+        syncBillValue(0, 'blur');
+        e.target.value = '0';
+      }
+    });
+
+    billSlider.addEventListener('input', (e) => syncBillValue(parseInt(e.target.value, 10), 'slider'));
+    quickButtons.forEach(btn => btn.addEventListener('click', () => syncBillValue(parseInt(btn.dataset.val, 10), 'button')));
+
+    function updateTimeValues(dayVal) {
+      currentDayPercent = Math.max(0, Math.min(100, dayVal));
+      let night = 100 - currentDayPercent;
+      dayInput.value = currentDayPercent;
+      nightInput.value = night;
+      timeSlider.value = currentDayPercent;
+
+      timeButtons.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.day, 10) === currentDayPercent);
+      });
+      recalculateAll();
+    }
+
+    timeSlider.addEventListener('input', (e) => updateTimeValues(parseInt(e.target.value, 10)));
+    dayInput.addEventListener('input', (e) => {
+      let val = parseInt(e.target.value, 10);
+      updateTimeValues(isNaN(val) ? 0 : val);
+    });
+    nightInput.addEventListener('input', (e) => {
+      let val = parseInt(e.target.value, 10);
+      updateTimeValues(100 - (isNaN(val) ? 0 : val));
+    });
+    timeButtons.forEach(btn => btn.addEventListener('click', () => updateTimeValues(parseInt(btn.dataset.day, 10))));
+
+    packageButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        packageButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentBasePrice = parseInt(btn.dataset.price, 10);
+        currentSolarGen = parseInt(btn.dataset.gen, 10);
+        solarGenDisplay.innerText = formatNumber(currentSolarGen);
+        
+        let batteryExtra = parseInt(batterySelect.value, 10);
+        totalSystemPrice.value = formatNumber(currentBasePrice + batteryExtra);
+        recalculateAll();
+      });
+    });
+
+    batterySelect.addEventListener('change', () => {
+      let batteryExtra = parseInt(batterySelect.value, 10);
+      totalSystemPrice.value = formatNumber(currentBasePrice + batteryExtra);
+      recalculateAll();
+    });
+
+    totalSystemPrice.addEventListener('input', (e) => {
+      let rawVal = parseNumber(e.target.value);
+      e.target.value = rawVal === 0 && e.target.value === '' ? '' : formatNumber(rawVal);
+      recalculateAll();
+    });
+
+    totalSystemPrice.addEventListener('blur', (e) => {
+      if (e.target.value === '') {
+        totalSystemPrice.value = '0';
+        recalculateAll();
+      }
+    });
+
+    payModeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        payModeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPayMode = btn.dataset.mode;
+        if (currentPayMode === 'cash') {
+          cashSection.style.display = 'block';
+          loanSection.style.display = 'none';
+        } else {
+          cashSection.style.display = 'none';
+          loanSection.style.display = 'flex';
+        }
+        recalculateAll();
+      });
+    });
+
+    loanTermSelect.addEventListener('change', recalculateAll);
+    loan2RateSelect.addEventListener('change', recalculateAll);
+
+    recalculateAll();
+  </script>
+
+</body>
+</html>
