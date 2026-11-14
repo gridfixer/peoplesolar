@@ -3,8 +3,12 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
-  <title>โซลาร์ภาคประชาชน</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E%3Cdefs%3E%3ClinearGradient id='p' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%238b5cf6'/%3E%3Cstop offset='100%25' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23p)'/%3E%3Ccircle cx='32' cy='23' r='9' fill='%23fbbf24'/%3E%3Cpath d='M16 37 L48 37 L52 49 L12 49 Z' fill='%2338bdf8' opacity='0.95'/%3E%3Cline x1='32' y1='37' x2='32' y2='49' stroke='%23ffffff' stroke-width='1.5'/%3E%3Cline x1='21' y1='43' x2='43' y2='43' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คำนวณความคุ้มค่าโซลาร์เซลล์</title>
+  
+  <!-- ไอคอนพระอาทิตย์สีเหลืองเด่นชัด ไม่มีพื้นหลัง -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'%3E%3Ccircle cx='50' cy='50' r='26' fill='%23fbbf24'/%3E%3Cg stroke='%23fbbf24' stroke-width='8' stroke-linecap='round'%3E%3Cline x1='50' y1='10' x2='50' y2='20'/%3E%3Cline x1='50' y1='80' x2='50' y2='90'/%3E%3Cline x1='10' y1='50' x2='20' y2='50'/%3E%3Cline x1='80' y1='50' x2='90' y2='50'/%3E%3Cline x1='22' y1='22' x2='29' y2='29'/%3E%3Cline x1='71' y1='71' x2='78' y2='78'/%3E%3Cline x1='22' y1='78' x2='29' y2='71'/%3E%3Cline x1='71' y1='29' x2='78' y2='22'/%3E%3C/g%3E%3C/svg%3E">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
   
@@ -12,6 +16,7 @@
        1. ตัวแปรสีและค่าพื้นฐาน (Variables & Reset)
        ========================================== */
     :root {
+      color-scheme: light;
       --primary: #7c3aed;          /* ม่วงหลัก */
       --primary-hover: #6d28d9;    /* ม่วงเข้มเมื่อชี้/กด */
       --primary-light: #f5f3ff;    /* ม่วงอ่อนพื้นหลัง */
@@ -19,13 +24,12 @@
       --bg-page: #ede9fe;          /* พื้นหลังเว็บโทนม่วงอ่อน */
       --bg-card: #ffffff;          /* พื้นหลังกล่อง */
       --text-main: #1e293b;        /* สีตัวอักษรหลัก */
-      --text-muted: #475569;       /* ปรับสีตัวอักษรรองให้เข้มขึ้นนิดหน่อยเพื่อให้อ่านง่ายขึ้น */
+      --text-muted: #475569;       /* สีตัวอักษรรอง */
       --radius-lg: 16px;           /* ความโค้งกล่องหลัก */
       --radius-md: 8px;            /* ความโค้งปุ่มและช่องกรอก */
       --shadow-card: 0 4px 20px -2px rgba(124, 58, 237, 0.08);
     }
   
-    /* ขยายขนาดตัวอักษรพื้นฐานทั้งเว็บให้ใหญ่ขึ้น (จากปกติ 16px เป็น 18px) */
     html {
       font-size: 18px;
     }
@@ -38,14 +42,14 @@
     }
   
     body {
-      background-color: var(--bg-page);
-      color: var(--text-main);
+      background-color: var(--bg-page) !important;
+      color: var(--text-main) !important;
       padding: 16px;
       line-height: 1.55;
     }
   
     /* ==========================================
-       2. เลย์เอาต์หลักและระบบ Responsive Grid (PC vs Mobile)
+       2. เลย์เอาต์หลักและระบบ Responsive Grid
        ========================================== */
     .app-container {
       max-width: 1024px;
@@ -55,7 +59,6 @@
       gap: 16px;
     }
   
-    /* กำหนดระยะห่างระหว่างกล่อง 1, 2, 3 และ 4, 5, 6 ให้มีผลทั้งบนมือถือและ PC */
     .col-left,
     .col-right {
       display: flex;
@@ -63,7 +66,6 @@
       gap: 16px;
     }
   
-    /* โครงสร้างสำหรับหน้าจอ PC (กว้าง 900px ขึ้นไป) แบ่งเป็น 2 คอลัมน์ซ้าย-ขวา */
     @media (min-width: 900px) {
       .app-container {
         display: grid;
@@ -86,7 +88,7 @@
        3. กล่องข้อมูล (Cards & Headers)
        ========================================== */
     .card-box {
-      background: var(--bg-card);
+      background: var(--bg-card) !important;
       border-radius: var(--radius-lg);
       padding: 22px;
       box-shadow: var(--shadow-card);
@@ -330,20 +332,13 @@
       }
     }
   
-    .note-text {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 8px;
-      text-align: right;
-    }
-  
     /* ==========================================
        7. คลาสกลางสำหรับรายการสรุป (Summary Lists)
        ========================================== */
     .summary-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px; /* ปรับลดช่องว่างตามที่ระบุ */
     }
   
     .summary-row {
@@ -369,10 +364,6 @@
   
     .summary-val.discount {
       color: #ef4444;
-    }
-  
-    .summary-val.normal-dark {
-      color: var(--text-main);
     }
   
     .summary-divider {
@@ -474,19 +465,13 @@
     }
   
     /* ==========================================
-       9. คลาสกลางยูทิลิตี้และแถบไฮไลต์ (Shared Utilities)
+       9. ยูทิลิตี้และแถบไฮไลต์ (Shared Utilities)
        ========================================== */
-    .purple-unit-text {
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-  
     .purple-highlight-box {
       background: var(--primary);
       color: #fff;
       border-radius: var(--radius-md);
-      padding: 8px 16px;
+      padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -511,7 +496,7 @@
     .main-header-box {
       background: var(--primary);
       color: #ffffff;
-      padding: 10px;
+      padding: 10px; /* ปรับ padding ให้เล็กลง */
       border-radius: var(--radius-lg);
       text-align: center;
       box-shadow: var(--shadow-card);
@@ -530,8 +515,8 @@
       width: 100%;
     }
   </style>
-</head>
   
+</head>
 <body>
 
   <div class="app-container">
@@ -543,7 +528,7 @@
 
     <!-- คอลัมน์ซ้าย (กล่อง 1, 2, 3) -->
     <div class="col-left">
-      <!-- กล่องที่ 1: ค่าไฟรายเดือน -->
+      <!-- กล่องที่ 1: ค่าไฟเฉลี่ยต่อเดือน -->
       <div class="card-box">
         <div class="section-header">
           <div class="badge-step">1</div>
@@ -552,26 +537,26 @@
 
         <div class="input-wrapper">
           <span class="currency-prefix">฿</span>
-          <input type="text" id="billInput" class="number-input" inputmode="numeric" value="4,000">
+          <input type="text" id="billInput" class="number-input" inputmode="numeric" value="2,500">
         </div>
 
         <div class="slider-container">
-          <input type="range" id="billSlider" class="purple-slider" min="0" max="20000" step="100" value="4000">
+          <input type="range" id="billSlider" class="purple-slider" min="0" max="20000" step="100" value="2500">
         </div>
 
         <div class="quick-select-grid" id="quickButtons">
-          <button type="button" class="pill-btn" data-val="2500">฿2,500</button>
-          <button type="button" class="pill-btn active" data-val="5000">฿5,000</button>
-          <button type="button" class="pill-btn" data-val="7500">฿7,500</button>
-          <button type="button" class="pill-btn" data-val="10000">฿10,000</button>
+          <button type="button" class="pill-btn active" data-val="2500">2,500</button>
+          <button type="button" class="pill-btn" data-val="5000">5,000</button>
+          <button type="button" class="pill-btn" data-val="7500">7,500</button>
+          <button type="button" class="pill-btn" data-val="10000">10,000</button>
         </div>
 
         <div class="bill-unit-result">
-          คิดเป็นหน่วยการใช้ไฟฟ้าเดือนละ <span id="unitResult">0</span> หน่วย
+          คิดเป็นหน่วยการใช้ไฟฟ้า <span id="unitResult">0</span> หน่วย/เดือน
         </div>
       </div>
 
-      <!-- กล่องที่ 2: ใช้ไฟช่วงไหนมากที่สุด? -->
+      <!-- กล่องที่ 2: ช่วงเวลาการใช้ไฟ -->
       <div class="card-box">
         <div class="section-header">
           <div class="badge-step">2</div>
@@ -607,7 +592,7 @@
         </div>
       </div>
 
-      <!-- กล่องที่ 3: ขนาดโซลาร์เซลล์ (เอาคำว่า ชุดเริ่มต้น/ชุดใหญ่ ออก) -->
+      <!-- กล่องที่ 3: ขนาดโซลาร์เซลล์ -->
       <div class="card-box">
         <div class="section-header">
           <div class="badge-step">3</div>
@@ -632,14 +617,14 @@
         </div>
 
         <div class="bill-unit-result" style="text-align: right;">
-          ผลิตไฟฟ้าเฉลี่ยเดือนละ <span id="solarGenDisplay">580</span> หน่วย
+          ผลิตไฟฟ้าเฉลี่ย <span id="solarGenDisplay">580</span> หน่วย/เดือน
         </div>
       </div>
     </div>
 
     <!-- คอลัมน์ขวา (กล่อง 4, 5, 6) -->
     <div class="col-right">
-      <!-- กล่องที่ 4: หักเงินสนับสนุนจากรัฐ (ย้ายมาอยู่ขวา ก่อนกล่องที่ 5) -->
+      <!-- กล่องที่ 4: หักเงินสนับสนุนจากรัฐ -->
       <div class="card-box">
         <div class="section-header">
           <div class="badge-step">4</div>
@@ -707,7 +692,7 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan1ResultText">
-              สัญญาที่ 1 ผ่อนชำระเดือนละ ฿ 1,600
+              สัญญาที่ 1 ผ่อนชำระต่อเดือน ฿ 1,600
             </div>
           </div>
 
@@ -734,12 +719,12 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan2ResultText">
-              สัญญาที่ 2 ผ่อนชำระเดือนละ ฿ 0
+              สัญญาที่ 2 ผ่อนชำระต่อเดือน ฿ 0
             </div>
           </div>
 
           <div class="purple-highlight-box">
-            <div class="purple-highlight-label" style="font-weight: 700;">รวมผ่อนชำระเดือนละ</div>
+            <div class="purple-highlight-label" style="font-weight: 700;">รวมผ่อนชำระต่อเดือนทั้งสิ้น</div>
             <div class="purple-highlight-val" id="totalLoanMonthly" style="font-weight: 700;">฿ 1,600</div>
           </div>
         </div>
@@ -754,12 +739,12 @@
 
         <div class="summary-list">
           <div class="summary-row">
-            <span class="summary-label">ลดค่าไฟได้เดือนละ <span id="savingUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-label">ลดค่าไฟได้ต่อเดือน <span id="savingUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
             <span class="summary-val">฿ <span id="savingBillDisplay">0</span></span>
           </div>
 
           <div class="summary-row">
-            <span class="summary-label">ขายไฟคืนได้เดือนละ <span id="sellUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
+            <span class="summary-label">ขายไฟคืนได้ต่อเดือน <span id="sellUnitsNum" style="color: var(--primary); font-weight: 600;">0</span> หน่วย</span>
             <span class="summary-val">฿ <span id="sellBackDisplay">0</span></span>
           </div>
 
@@ -769,7 +754,7 @@
           </div>
 
           <div class="summary-row" id="netLoanRow" style="display: none;">
-            <span class="summary-label">คงเหลือต้องผ่อนชำระเดือนละ</span>
+            <span class="summary-label">คงเหลือต้องผ่อนชำระต่อเดือน</span>
             <span class="summary-val">฿ <span id="netLoanPayDisplay">0</span></span>
           </div>
 
@@ -783,7 +768,7 @@
       </div>
     </div>
 
-    <!-- ส่วนท้ายสุดจริงๆ (อัปเดตชื่อผู้พัฒนาเป็นการไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง) -->
+    <!-- ส่วนท้ายสุด -->
     <div class="footer-note-box grid-footer">
       หมายเหตุ : ตัวเลขทั้งหมดเป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
       พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง
@@ -888,7 +873,7 @@
     const netLoanPayDisplay = document.getElementById('netLoanPayDisplay');
     const paybackDisplay = document.getElementById('paybackDisplay');
 
-    let currentBillBaht = 4000;
+    let currentBillBaht = 2500; // ค่าเริ่มต้น 2500
     let currentDayPercent = 50;
     let currentBasePrice = 140000;
     let currentSolarGen = 580;
@@ -919,7 +904,7 @@
       } else {
         monthly1 = calculateMonthlyPayment(90000, 2.5, months);
         loan1Principal.innerText = "฿ " + formatNumber(90000);
-        loan1ResultText.innerHTML = `สัญญาที่ 1 ผ่อนชำระเดือนละ ฿ ${formatNumber(monthly1)}`;
+        loan1ResultText.innerHTML = `สัญญาที่ 1 ผ่อนชำระต่อเดือน ฿ ${formatNumber(monthly1)}`;
         loan1ResultText.style.color = "var(--text-main)";
         loan1ResultText.style.background = "var(--primary-light)";
 
@@ -929,7 +914,7 @@
           let rate2 = parseFloat(loan2RateSelect.value);
           monthly2 = calculateMonthlyPayment(principal2, rate2, months);
           loan2Principal.innerText = "฿ " + formatNumber(principal2);
-          loan2ResultText.innerHTML = `สัญญาที่ 2 ผ่อนชำระเดือนละ ฿ ${formatNumber(monthly2)}`;
+          loan2ResultText.innerHTML = `สัญญาที่ 2 ผ่อนชำระต่อเดือน ฿ ${formatNumber(monthly2)}`;
         } else {
           loan2Container.style.display = "none";
         }
@@ -938,7 +923,6 @@
         totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
       }
 
-      // คำนวณความคุ้มค่า (กล่อง 6)
       let batteryExtra = parseInt(batterySelect.value, 10);
       let A = currentSolarGen; 
       let B = totalUnits * (currentDayPercent / 100); 
@@ -1006,7 +990,6 @@
       return Math.round((principal + totalInterest) / months);
     }
 
-    // Event Listeners
     function syncBillValue(val, source) {
       currentBillBaht = Math.max(0, Math.min(20000, val));
       if (source !== 'input') billInput.value = formatNumber(currentBillBaht);
