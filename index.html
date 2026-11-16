@@ -545,7 +545,6 @@
       color: var(--text-muted);
       text-align: left;
       padding: 8px 4px;
-      line-height: 1.65;
       width: 100%;
     }
   </style>
@@ -814,8 +813,20 @@
     <!-- ส่วนท้ายสุด -->
     <div class="footer-note-box grid-footer">
       หมายเหตุ : เป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
-      พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง
+      พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง<br>
+      จำนวนเข้าชม : <span id="visitorCount">...</span> ครั้ง
     </div>
+
+    <script>
+      fetch('https://script.google.com/macros/s/AKfycby6NPmvTAiUykLvvc1MBAL2_jzO5PsrkQVpCLsNr_7z4cK-eAODgjqKRMvuaGcrMHvC/exec')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('visitorCount').innerText = Number(data.visitors).toLocaleString('en-US');
+        })
+        .catch(error => {
+          document.getElementById('visitorCount').innerText = "-";
+        });
+    </script>
 
   </div>
 
