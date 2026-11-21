@@ -59,11 +59,31 @@
       gap: 16px;
     }
   
-    .col-left,
-    .col-right {
+    .left-cards-group {
       display: flex;
       flex-direction: column;
       gap: 16px;
+    }
+  
+    @media (max-width: 899px) {
+      .col-left {
+        display: contents;
+      }
+      .grid-header {
+        order: 1;
+      }
+      .left-cards-group {
+        order: 2;
+      }
+      .col-right {
+        order: 3;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .grid-footer {
+        order: 4;
+      }
     }
   
     @media (min-width: 900px) {
@@ -72,16 +92,24 @@
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
           "header header"
-          "col-left col-right"
-          "footer footer";
+          "col-left col-right";
         column-gap: 18px;
         row-gap: 18px;
         align-items: start;
       }
       .grid-header { grid-area: header; }
-      .col-left    { grid-area: col-left; }
-      .col-right   { grid-area: col-right; }
-      .grid-footer { grid-area: footer; }
+      .col-left {
+        grid-area: col-left;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .col-right {
+        grid-area: col-right;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
     }
   
     /* ==========================================
@@ -378,6 +406,7 @@
     .loan-section .summary-divider {
       margin: 0 0 -4px 0;
     }
+  
     .summary-row.highlight .summary-label {
       font-size: 1.05rem;
       font-weight: 600;
@@ -559,99 +588,108 @@
       </h1>
     </div>
 
-    <!-- คอลัมน์ซ้าย (กล่อง 1, 2, 3) -->
+    <!-- คอลัมน์ซ้าย (กล่อง 1, 2, 3 และส่วนท้ายในโหมด PC) -->
     <div class="col-left">
-      <!-- กล่องที่ 1: ค่าไฟเฉลี่ยต่อเดือน -->
-      <div class="card-box">
-        <div class="section-header">
-          <div class="badge-step">1</div>
-          <h2 class="section-title">ค่าไฟเฉลี่ยต่อเดือน</h2>
-        </div>
-
-        <div class="input-wrapper">
-          <span class="currency-prefix">฿</span>
-          <input type="text" id="billInput" class="number-input" inputmode="numeric" value="5,000">
-        </div>
-
-        <div class="slider-container">
-          <input type="range" id="billSlider" class="purple-slider" min="0" max="20000" step="100" value="5000">
-        </div>
-
-        <div class="quick-select-grid" id="quickButtons">
-          <button type="button" class="pill-btn" data-val="2500">2,500</button>
-          <button type="button" class="pill-btn active" data-val="5000">5,000</button>
-          <button type="button" class="pill-btn" data-val="7500">7,500</button>
-          <button type="button" class="pill-btn" data-val="10000">10,000</button>
-        </div>
-
-        <div class="bill-unit-result">
-          ใช้ไฟประมาณ <span id="unitResult">0</span> หน่วย/เดือน
-        </div>
-      </div>
-
-      <!-- กล่องที่ 2: ช่วงเวลาการใช้ไฟ -->
-      <div class="card-box">
-        <div class="section-header">
-          <div class="badge-step">2</div>
-          <h2 class="section-title">ช่วงเวลาการใช้ไฟ</h2>
-        </div>
-
-        <div class="time-split-grid">
-          <div class="time-column" style="align-items: flex-start;">
-            <span class="time-label-top">☀️ กลางวัน</span>
-            <div class="time-input-box" style="width: 100%;">
-              <input type="number" id="dayInput" class="time-number-input" style="text-align: left;" min="0" max="100" value="50">
-              <span class="time-unit">%</span>
-            </div>
+      <div class="left-cards-group">
+        <!-- กล่องที่ 1: ค่าไฟเฉลี่ยต่อเดือน -->
+        <div class="card-box">
+          <div class="section-header">
+            <div class="badge-step">1</div>
+            <h2 class="section-title">ค่าไฟเฉลี่ยต่อเดือน</h2>
           </div>
 
-          <div class="time-column" style="align-items: flex-end;">
-            <span class="time-label-top">🌙 กลางคืน</span>
-            <div class="time-input-box" style="width: 100%;">
-              <input type="number" id="nightInput" class="time-number-input" style="text-align: right;" min="0" max="100" value="50">
-              <span class="time-unit">%</span>
-            </div>
+          <div class="input-wrapper">
+            <span class="currency-prefix">฿</span>
+            <input type="text" id="billInput" class="number-input" inputmode="numeric" value="5,000">
+          </div>
+
+          <div class="slider-container">
+            <input type="range" id="billSlider" class="purple-slider" min="0" max="20000" step="100" value="5000">
+          </div>
+
+          <div class="quick-select-grid" id="quickButtons">
+            <button type="button" class="pill-btn" data-val="2500">2,500</button>
+            <button type="button" class="pill-btn active" data-val="5000">5,000</button>
+            <button type="button" class="pill-btn" data-val="7500">7,500</button>
+            <button type="button" class="pill-btn" data-val="10000">10,000</button>
+          </div>
+
+          <div class="bill-unit-result">
+            ใช้ไฟประมาณ <span id="unitResult">0</span> หน่วย/เดือน
           </div>
         </div>
 
-        <div class="slider-container">
-          <input type="range" id="timeSlider" class="purple-slider" min="0" max="100" step="5" value="50">
+        <!-- กล่องที่ 2: ช่วงเวลาการใช้ไฟ -->
+        <div class="card-box">
+          <div class="section-header">
+            <div class="badge-step">2</div>
+            <h2 class="section-title">ช่วงเวลาการใช้ไฟ</h2>
+          </div>
+
+          <div class="time-split-grid">
+            <div class="time-column" style="align-items: flex-start;">
+              <span class="time-label-top">☀️ กลางวัน</span>
+              <div class="time-input-box" style="width: 100%;">
+                <input type="number" id="dayInput" class="time-number-input" style="text-align: left;" min="0" max="100" value="50">
+                <span class="time-unit">%</span>
+              </div>
+            </div>
+
+            <div class="time-column" style="align-items: flex-end;">
+              <span class="time-label-top">🌙 กลางคืน</span>
+              <div class="time-input-box" style="width: 100%;">
+                <input type="number" id="nightInput" class="time-number-input" style="text-align: right;" min="0" max="100" value="50">
+                <span class="time-unit">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-container">
+            <input type="range" id="timeSlider" class="purple-slider" min="0" max="100" step="5" value="50">
+          </div>
+
+          <div class="equal-width-grid" id="timeButtons">
+            <button type="button" class="pill-btn" data-day="70">กลางวัน</button>
+            <button type="button" class="pill-btn active" data-day="50">เท่ากัน</button>
+            <button type="button" class="pill-btn" data-day="30">กลางคืน</button>
+          </div>
         </div>
 
-        <div class="equal-width-grid" id="timeButtons">
-          <button type="button" class="pill-btn" data-day="70">กลางวัน</button>
-          <button type="button" class="pill-btn active" data-day="50">เท่ากัน</button>
-          <button type="button" class="pill-btn" data-day="30">กลางคืน</button>
+        <!-- กล่องที่ 3: ขนาดโซลาร์เซลล์ -->
+        <div class="card-box">
+          <div class="section-header">
+            <div class="badge-step">3</div>
+            <h2 class="section-title">ขนาดโซลาร์เซลล์</h2>
+          </div>
+
+          <div class="input-wrapper" style="margin-bottom: 14px;">
+            <span class="currency-prefix">฿</span>
+            <input type="text" id="totalSystemPrice" class="number-input" inputmode="numeric" value="140,000">
+          </div>
+
+          <div class="package-layout" id="packageButtons" style="margin-bottom: 0;">
+            <button type="button" class="pill-btn active" data-kw="5" data-price="140000" data-gen="600">ชุดเล็ก 5 kW</button>
+            <button type="button" class="pill-btn" data-kw="10" data-price="240000" data-gen="1200">ชุดใหญ่ 10 kW</button>
+            
+            <select id="batterySelect" class="custom-select">
+              <option value="0">แบตเตอรี่: ไม่ใช้</option>
+              <option value="60000">แบตเตอรี่: 5 kW</option>
+              <option value="120000">แบตเตอรี่: 10 kW</option>
+              <option value="180000">แบตเตอรี่: 15 kW</option>
+            </select>
+          </div>
+
+          <div class="bill-unit-result" style="text-align: right;">
+            ผลิตไฟเฉลี่ย <span id="solarGenDisplay">600</span> หน่วย/เดือน
+          </div>
         </div>
       </div>
 
-      <!-- กล่องที่ 3: ขนาดโซลาร์เซลล์ -->
-      <div class="card-box">
-        <div class="section-header">
-          <div class="badge-step">3</div>
-          <h2 class="section-title">ขนาดโซลาร์เซลล์</h2>
-        </div>
-
-        <div class="input-wrapper" style="margin-bottom: 14px;">
-          <span class="currency-prefix">฿</span>
-          <input type="text" id="totalSystemPrice" class="number-input" inputmode="numeric" value="140,000">
-        </div>
-
-        <div class="package-layout" id="packageButtons" style="margin-bottom: 0;">
-          <button type="button" class="pill-btn active" data-kw="5" data-price="140000" data-gen="600">ชุดเล็ก 5 kW</button>
-          <button type="button" class="pill-btn" data-kw="10" data-price="240000" data-gen="1200">ชุดใหญ่ 10 kW</button>
-          
-          <select id="batterySelect" class="custom-select">
-            <option value="0">แบตเตอรี่: ไม่ใช้</option>
-            <option value="60000">แบตเตอรี่: 5 kW</option>
-            <option value="120000">แบตเตอรี่: 10 kW</option>
-            <option value="180000">แบตเตอรี่: 15 kW</option>
-          </select>
-        </div>
-
-        <div class="bill-unit-result" style="text-align: right;">
-          ผลิตไฟเฉลี่ย <span id="solarGenDisplay">600</span> หน่วย/เดือน
-        </div>
+      <!-- ส่วนท้ายสุด (ในโหมด PC อยู่ต่อท้ายกล่องที่ 3 ในคอลัมน์ซ้าย / ในโหมดมือถืออยู่ล่างสุด) -->
+      <div class="footer-note-box grid-footer">
+        หมายเหตุ : เป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
+        พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคจังหวัดสุโขทัย<br>
+        จำนวนเข้าชม : <span id="visitorCount" style="font-weight: 600; color: var(--primary);">...</span> ครั้ง
       </div>
     </div>
 
@@ -809,27 +847,20 @@
       </div>
     </div>
 
-    <!-- ส่วนท้ายสุด -->
-    <div class="footer-note-box grid-footer">
-      หมายเหตุ : เป็นค่าประมาณการเบื้องต้นเท่านั้น<br>
-      พัฒนาโดย : การไฟฟ้าส่วนภูมิภาคสาขาศรีสำโรง<br>
-      จำนวนเข้าชม : <span id="visitorCount" style="font-weight: 600; color: var(--primary);">...</span> ครั้ง
-    </div>
-
-    <script>
-      fetch('https://script.google.com/macros/s/AKfycby6NPmvTAiUykLvvc1MBAL2_jzO5PsrkQVpCLsNr_7z4cK-eAODgjqKRMvuaGcrMHvC/exec')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('visitorCount').innerText = Number(data.visitors).toLocaleString('en-US');
-        })
-        .catch(error => {
-          document.getElementById('visitorCount').innerText = "-";
-        });
-    </script>
-    
   </div>
 
-<script>
+  <script>
+    fetch('https://script.google.com/macros/s/AKfycby6NPmvTAiUykLvvc1MBAL2_jzO5PsrkQVpCLsNr_7z4cK-eAODgjqKRMvuaGcrMHvC/exec')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('visitorCount').innerText = Number(data.visitors).toLocaleString('en-US');
+      })
+      .catch(error => {
+        document.getElementById('visitorCount').innerText = "-";
+      });
+  </script>
+
+  <script>
     const FT_RATE = 0.1623;
     const SERVICE_FEE = 24.62;
     const VAT_MULT = 1.07;
@@ -886,7 +917,6 @@
       return cleaned === '' ? 0 : parseInt(cleaned, 10);
     }
 
-    // DOM Elements
     const billInput = document.getElementById('billInput');
     const billSlider = document.getElementById('billSlider');
     const quickButtons = document.querySelectorAll('#quickButtons .pill-btn');
@@ -915,6 +945,7 @@
     const loan2Principal = document.getElementById('loan2Principal');
     const loan2RateSelect = document.getElementById('loan2RateSelect');
     const loan2ResultText = document.getElementById('loan2ResultText');
+    const netLoanRow = document.getElementById('netLoanRow');
     const totalLoanMonthly = document.getElementById('totalLoanMonthly');
 
     const savingBillDisplay = document.getElementById('savingBillDisplay');
@@ -922,7 +953,6 @@
     const sellBackDisplay = document.getElementById('sellBackDisplay');
     const sellUnitsNum = document.getElementById('sellUnitsNum');
     const totalBenefitDisplay = document.getElementById('totalBenefitDisplay');
-    const netLoanRow = document.getElementById('netLoanRow');
     const netLoanPayDisplay = document.getElementById('netLoanPayDisplay');
     const paybackDisplay = document.getElementById('paybackDisplay');
 
@@ -952,7 +982,7 @@
         loan1ResultText.style.color = "#ef4444";
         loan1ResultText.style.background = "#fef2f2";
         loan2Container.style.display = "none";
-        if (netLoanRow) netLoanRow.style.display = "none";
+        netLoanRow.style.display = "none";
         totalLoanMonthly.innerText = "฿ 0";
         currentTotalMonthlyLoan = 0;
       } else {
@@ -974,13 +1004,13 @@
           totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
 
           loan2Container.style.display = "block";
-          if (netLoanRow) netLoanRow.style.display = "flex";
+          netLoanRow.style.display = "flex";
         } else {
           currentTotalMonthlyLoan = monthly1;
           totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
 
           loan2Container.style.display = "none";
-          if (netLoanRow) netLoanRow.style.display = "none";
+          netLoanRow.style.display = "none";
         }
       }
 
