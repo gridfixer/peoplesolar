@@ -376,9 +376,8 @@
     }
   
     .loan-section .summary-divider {
-      margin: -4px 0;
+      margin: 0 0 -4px 0;
     }
-  
     .summary-row.highlight .summary-label {
       font-size: 1.05rem;
       font-weight: 600;
@@ -547,7 +546,6 @@
       width: 100%;
     }
   </style>
-    
 </head>
 <body>
 
@@ -954,7 +952,8 @@
         loan1ResultText.style.color = "#ef4444";
         loan1ResultText.style.background = "#fef2f2";
         loan2Container.style.display = "none";
-        totalLoanMonthly.innerText = "ไม่สามารถผ่อนชำระได้";
+        if (netLoanRow) netLoanRow.style.display = "none";
+        totalLoanMonthly.innerText = "฿ 0";
         currentTotalMonthlyLoan = 0;
       } else {
         monthly1 = calculateMonthlyPayment(90000, 2.5, months);
@@ -964,18 +963,25 @@
         loan1ResultText.style.background = "var(--primary-light)";
 
         if (netPrice > 90000) {
-          loan2Container.style.display = "block";
           let principal2 = netPrice - 90000;
           let rate2 = parseFloat(loan2RateSelect.value);
           monthly2 = calculateMonthlyPayment(principal2, rate2, months);
+
           loan2Principal.innerText = "฿ " + formatNumber(principal2);
           loan2ResultText.innerHTML = `ผ่อนเดือนละ ฿ ${formatNumber(monthly2)}`;
-        } else {
-          loan2Container.style.display = "none";
-        }
 
-        currentTotalMonthlyLoan = monthly1 + monthly2;
-        totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
+          currentTotalMonthlyLoan = monthly1 + monthly2;
+          totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
+
+          loan2Container.style.display = "block";
+          if (netLoanRow) netLoanRow.style.display = "flex";
+        } else {
+          currentTotalMonthlyLoan = monthly1;
+          totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
+
+          loan2Container.style.display = "none";
+          if (netLoanRow) netLoanRow.style.display = "none";
+        }
       }
 
       let batteryExtra = parseInt(batterySelect.value, 10);
@@ -1022,11 +1028,10 @@
       totalBenefitDisplay.innerText = formatNumber(totalBenefit);
 
       if (currentPayMode === 'loan' && netPrice >= 90000) {
-        netLoanRow.style.display = "flex";
         let netLoan = currentTotalMonthlyLoan - roundedSellBack;
         netLoanPayDisplay.innerText = formatNumber(netLoan);
       } else {
-        netLoanRow.style.display = "none";
+        netLoanPayDisplay.innerText = "0";
       }
 
       if (totalBenefit > 0 && netPrice > 0) {
