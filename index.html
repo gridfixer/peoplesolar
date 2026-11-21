@@ -507,6 +507,15 @@
       padding: 10px 12px;
       border-radius: 6px;
       margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  
+    .loan-result-amount {
+      text-align: right;
+      white-space: nowrap;
     }
   
     /* ==========================================
@@ -763,7 +772,8 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan1ResultText">
-              ผ่อนเดือนละ ฿ 1,600
+              <span>ผ่อนเดือนละ</span>
+              <span class="loan-result-amount">฿ 1,600</span>
             </div>
           </div>
 
@@ -790,7 +800,8 @@
               </div>
             </div>
             <div class="loan-result-text" id="loan2ResultText">
-              ผ่อนเดือนละ ฿ 0
+              <span>ผ่อนเดือนละ</span>
+              <span class="loan-result-amount">฿ 0</span>
             </div>
           </div>
 
@@ -988,7 +999,7 @@
       } else {
         monthly1 = calculateMonthlyPayment(90000, 2.5, months);
         loan1Principal.innerText = "฿ " + formatNumber(90000);
-        loan1ResultText.innerHTML = `ผ่อนเดือนละ ฿ ${formatNumber(monthly1)}`;
+        loan1ResultText.innerHTML = `<span>ผ่อนเดือนละ</span><span class="loan-result-amount">฿ ${formatNumber(monthly1)}</span>`;
         loan1ResultText.style.color = "var(--text-main)";
         loan1ResultText.style.background = "var(--primary-light)";
 
@@ -998,7 +1009,7 @@
           monthly2 = calculateMonthlyPayment(principal2, rate2, months);
 
           loan2Principal.innerText = "฿ " + formatNumber(principal2);
-          loan2ResultText.innerHTML = `ผ่อนเดือนละ ฿ ${formatNumber(monthly2)}`;
+          loan2ResultText.innerHTML = `<span>ผ่อนเดือนละ</span><span class="loan-result-amount">฿ ${formatNumber(monthly2)}</span>`;
 
           currentTotalMonthlyLoan = monthly1 + monthly2;
           totalLoanMonthly.innerText = `฿ ${formatNumber(currentTotalMonthlyLoan)}`;
